@@ -2,15 +2,18 @@ package com.blrest.mongo
 
 import reactivemongo.api.MongoDriver
 import com.typesafe.config.ConfigFactory
+import akka.actor.ActorSystem
+import com.blrest.boot.MyActorSystem
 
 
 /**
  * Created by ccarrier for bl-rest.
  * at 10:02 PM on 12/14/13
  */
-trait ReactiveMongoConnection {
+trait ReactiveMongoConnection extends MyActorSystem {
 
   private val config = ConfigFactory.load()
+  implicit val context = system.dispatcher
 
   val driver = new MongoDriver
   val connection = driver.connection(List(config.getString("mongodb.url")))

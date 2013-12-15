@@ -1,9 +1,10 @@
 package com.blrest.dao
 
-import reactivemongo.api.Collection
+import scala.concurrent.Future
+import akka.actor.ActorSystem
 import reactivemongo.bson.BSONDocument
 import reactivemongo.api.collections.default.BSONCollection
-import scala.concurrent.Future
+import com.typesafe.scalalogging.slf4j.Logging
 
 /**
  * Created by ccarrier for bl-rest.
@@ -15,9 +16,12 @@ trait ImageDirectoryDao {
 
 }
 
-class ImageDirectoryReactiveDao(imageCollection: BSONCollection) extends ImageDirectoryDao {
+class ImageDirectoryReactiveDao(imageCollection: BSONCollection, system: ActorSystem) extends ImageDirectoryDao with Logging {
+
+  implicit val context = system.dispatcher
 
   def getImageMetaData(key: Long): Future[Option[BSONDocument]] = {
+    logger.debug("Getting image: %s".format(key))
     val query = BSONDocument("flickr_id" -> key)
     imageCollection.find(query).one[BSONDocument]
   }

@@ -88,5 +88,6 @@ if (len(bulkDocuments) > 0):
     collection.insert(bulkDocuments, w = wVal)
     bulkDocuments = []
 
-collection.create_index("flickr_id", unique=True)
+collection.create_index("flickr_id")
 collection.create_index("title")
+collection.create_index("fileName")
