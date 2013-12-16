@@ -3,7 +3,7 @@ import sbt._
 import Defaults._
 
 resolvers ++= Seq(
-Classpaths.typesafeResolver
+Classpaths.typesafeReleases
 )
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-start-script" % "0.10.0")
