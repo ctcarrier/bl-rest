@@ -29,7 +29,7 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
     val pattern(user, password, host, port, dbName) = envUri
 
     val connection = driver.connection(List("%s:%s".format(host, port)))
-    val authResult = Await.result(connection.authenticate(dbName, user, password), 5.seconds)
+    val authResult = Await.result(connection.authenticate(dbName, user, password), 120.seconds)
 
     // Gets a reference to the database "plugin"
     val db = connection(config.getString(dbName))
