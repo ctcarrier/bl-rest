@@ -28,7 +28,7 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
     logger.info("Attempting to parse: %s".format(envUri))
     val pattern(user, password, host, port, dbName) = envUri
 
-    val connection = driver.connection(List(config.getString("%s:%s".format(host, port))))
+    val connection = driver.connection(List("%s:%s".format(host, port)))
     val authResult = Await.result(connection.authenticate(dbName, user, password), 5.seconds)
 
     // Gets a reference to the database "plugin"
