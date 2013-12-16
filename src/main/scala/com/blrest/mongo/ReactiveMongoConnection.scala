@@ -7,13 +7,14 @@ import com.blrest.boot.MyActorSystem
 import scala.util.Properties
 import scala.concurrent.duration._
 import scala.concurrent.Await
+import com.typesafe.scalalogging.slf4j.Logging
 
 
 /**
  * Created by ccarrier for bl-rest.
  * at 10:02 PM on 12/14/13
  */
-trait ReactiveMongoConnection extends MyActorSystem {
+trait ReactiveMongoConnection extends MyActorSystem with Logging {
 
   private val config = ConfigFactory.load()
   implicit val context = system.dispatcher
@@ -24,6 +25,7 @@ trait ReactiveMongoConnection extends MyActorSystem {
   val envUri = Properties.envOrElse("PORT", "").toString
 
   val (connection, db) = if (!envUri.isEmpty){
+    logger.info("Attempting to parse: %s".format(envUri))
     val pattern(user, password, host, port, dbName) = envUri
 
     val connection = driver.connection(List(config.getString("%s:%s".format(host, port))))
