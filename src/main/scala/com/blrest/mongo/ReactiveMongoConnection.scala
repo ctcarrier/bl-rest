@@ -25,15 +25,12 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
   val envUri = Properties.envOrElse("MONGOLAB_URI", "").toString
 
   val (connection, db) = if (!envUri.isEmpty){
-    logger.info("Attempting to parse: %s".format(envUri))
     val pattern(user, password, host, port, dbName) = envUri
 
     val connection = driver.connection(List("%s:%s".format(host, port)))
 
     val userName =Properties.envOrElse("MONGODB_USER", "FAIL")
     val pass = Properties.envOrElse("MONGODB_PASS", "FAIL")
-
-    logger.info("About to auth with %s:%s on %s:%s/%s".format(userName, pass, host, port, dbName))
 
     // Gets a reference to the database "plugin"
     val db = connection(dbName)
