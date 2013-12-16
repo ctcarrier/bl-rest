@@ -2,16 +2,19 @@ package com.blrest.endpoint
 
 import spray.http._
 import MediaTypes._
+
 import com.typesafe.scalalogging.slf4j.Logging
+
 import spray.routing.HttpService
 import spray.httpx.Json4sJacksonSupport
-import akka.actor.{ActorContext, Actor}
-import com.blrest.json.BLRestJacksonFormats
+
+import akka.actor.Actor
+
 import com.blrest.dao.ImageDirectoryDao
-import scala.util.Success
-import scala.concurrent.{ExecutionContext, Future}
-import spray.httpx.marshalling.Marshaller
+import com.blrest.model.ImageMeta
+
 import org.json4s.DefaultFormats
+import scala.concurrent.ExecutionContext
 
 /**
  * Created by ccarrier for bl-rest.
@@ -29,24 +32,27 @@ trait ImageDirectoryActor extends Actor with ImageDirectoryEndpoint {
 
 trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJacksonSupport {
 
-  implicit val context: ExecutionContext
+  import ExecutionContext.Implicits.global
+
   val imageDirectoryDao: ImageDirectoryDao
 
   val json4sJacksonFormats = DefaultFormats
 
   def imageDirectoryRoute =
     respondWithMediaType(`application/json`) {
-      path("images" / LongNumber){ key =>
-
-        get {
-          complete {
-            imageDirectoryDao.getImageMetaData(key) onComplete  { resp =>
-              ////              resp match {
-////              case Success(Some(x)) => x
-////              case _ => spray.http.StatusCodes.NotFound
-////            }
-              "Test"
+      pathPrefix("images") {
+        path(LongNumber) { key =>
+          get {
+            complete {
+              imageDirectoryDao.getImageMetaData(key).mapTo[Option[ImageMeta]]
+            }
           }
+        } ~
+        path("random"){
+          get {
+            complete {
+              imageDirectoryDao.getRandomImageMetaData.mapTo[Option[ImageMeta]]
+            }
           }
         }
       }

@@ -37,7 +37,7 @@ object Boot extends App with Logging with ReactiveMongoConnection with MyActorSy
   val host = "0.0.0.0"
   val port = Properties.envOrElse("PORT", "8080").toInt
 
-  private val imageDirectoryDao: ImageDirectoryDao = new ImageDirectoryReactiveDao(imageCollection, system)
+  private val imageDirectoryDao: ImageDirectoryDao = new ImageDirectoryReactiveDao(db, imageCollection, system)
 
   // the handler actor replies to incoming HttpRequests
   val handler = system.actorOf(Props(classOf[DependencyInjector], imageDirectoryDao), name = "imageDirectoryEndpoint")

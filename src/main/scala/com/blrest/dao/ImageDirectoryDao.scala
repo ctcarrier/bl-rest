@@ -2,9 +2,20 @@ package com.blrest.dao
 
 import scala.concurrent.Future
 import akka.actor.ActorSystem
+
 import reactivemongo.bson.BSONDocument
 import reactivemongo.api.collections.default.BSONCollection
+
 import com.typesafe.scalalogging.slf4j.Logging
+
+import com.blrest._
+import com.blrest.model.ImageMeta
+
+import reactivemongo.api.{QueryOpts, DB}
+import reactivemongo.core.commands.Count
+import reactivemongo.api.collections.default._
+
+import scala.util.Random
 
 /**
  * Created by ccarrier for bl-rest.
@@ -12,17 +23,26 @@ import com.typesafe.scalalogging.slf4j.Logging
  */
 trait ImageDirectoryDao {
 
-  def getImageMetaData(key: Long): Future[Option[BSONDocument]]
+  def getImageMetaData(key: Long): Future[Option[ImageMeta]]
+  def getRandomImageMetaData: Future[Option[ImageMeta]]
 
 }
 
-class ImageDirectoryReactiveDao(imageCollection: BSONCollection, system: ActorSystem) extends ImageDirectoryDao with Logging {
+class ImageDirectoryReactiveDao(db: DB, imageCollection: BSONCollection, system: ActorSystem) extends ImageDirectoryDao with Logging {
 
   implicit val context = system.dispatcher
 
-  def getImageMetaData(key: Long): Future[Option[BSONDocument]] = {
+  def getImageMetaData(key: Long): Future[Option[ImageMeta]] = {
     logger.debug("Getting image: %s".format(key))
     val query = BSONDocument("flickr_id" -> key)
-    imageCollection.find(query).one[BSONDocument]
+    imageCollection.find(query).one[ImageMeta]
+  }
+
+  def getRandomImageMetaData: Future[Option[ImageMeta]] = {
+    val futureCount = db.command(Count(imageCollection.name))
+    futureCount.flatMap { count =>
+      val skip = Random.nextInt(count)
+      imageCollection.find(BSONDocument()).options(QueryOpts(skipN = skip)).one[ImageMeta]
+    }
   }
 }
