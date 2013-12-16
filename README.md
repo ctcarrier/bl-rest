@@ -21,7 +21,7 @@ test
 Currently there are only two endpoints supported in this service. One will allow you to get the meta-data for an image
 with the Flickr ID and the other will return a random image meta data.
 
-<h2>GET http://bl-rest.herokuapp.com/images/<FLICKR_ID></h2>
+<h2>GET http://bl-rest.herokuapp.com/images/:FLICKR_ID></h2>
 
 Example response:
 
@@ -61,6 +61,7 @@ Example response:
   "ARK_id_of_book" : "",
   "BL_DLS_ID" : ""
 }
+```
 
 More APIs will be added in the future this is just a starting place.
 
