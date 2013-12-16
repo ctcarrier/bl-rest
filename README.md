@@ -16,7 +16,7 @@ At the sbt console:
 At the sbt console:
 test
 
-<h3>API<h3>
+<h3>API</h3>
 
 Currently there are only two endpoints supported in this service. One will allow you to get the meta-data for an image
 with the Flickr ID and the other will return a random image meta data.
