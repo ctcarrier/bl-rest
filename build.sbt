@@ -43,6 +43,7 @@ libraryDependencies ++= Seq(
     "io.spray" % "spray-can" % "1.2.0" % "compile" withSources(),
     "io.spray" % "spray-io" % "1.2.0" % "compile" withSources(),
     "io.spray" % "spray-caching" % "1.2.0" % "compile" withSources(),
+  "io.spray" % "spray-testkit" % "1.2.0" % "compile" withSources(),
     //AKKA
     "com.typesafe.akka" %% "akka-actor" % "2.2.3",
   "com.typesafe.akka" %% "akka-slf4j" % "2.2.3",
@@ -50,6 +51,7 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-jackson" % "3.2.6",
   //TESTING
   "org.specs2" %% "specs2" % "2.3.6" % "test" exclude("com.chuusai", "shapeless_2.10.3"),
+  "org.scalamock" %% "scalamock-specs2-support" % "3.0.1" % "test",
   //ReactiveMongo
   "org.reactivemongo" %% "reactivemongo" % "0.10.0-SNAPSHOT" % "compile"
 )

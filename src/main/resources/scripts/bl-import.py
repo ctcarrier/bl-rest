@@ -14,6 +14,8 @@ parser.add_argument('--mongoDb', default='bl_import', required=False, help='Mong
 parser.add_argument('--mongoCollection', default='bl_meta', required=False, help='Mongo collection name.')
 parser.add_argument('--insertSize', default=50, required=False, help='Size of bulk import.', type=int)
 parser.add_argument('--insertSafe', default=True, required=False, help='Set false to use fire-and-forget insert.', type=bool)
+parser.add_argument('--mongoUser', default="", required=False, help='Mongo user.')
+parser.add_argument('--mongoPass', default="", required=False, help='Mongo pass.')
 parser.add_argument('filePath', help='Root file path to British Library TSV files')
 ns = parser.parse_args()
 
@@ -22,7 +24,10 @@ if (ns.insertSafe == False):
     wVal = 0
 
 client = MongoClient(ns.mongoHost, ns.mongoPort)
+
 db = client[ns.mongoDb]
+if (len(ns.mongoUser) > 0):
+    db.authenticate(ns.mongoUser, ns.mongoPass)
 collection = db[ns.mongoCollection]
 bulkDocuments = []
 

@@ -5,15 +5,14 @@ import akka.actor.ActorSystem
 
 import reactivemongo.bson.BSONDocument
 import reactivemongo.api.collections.default.BSONCollection
+import reactivemongo.api.{QueryOpts, DB}
+import reactivemongo.core.commands.Count
+import reactivemongo.api.collections.default._
 
 import com.typesafe.scalalogging.slf4j.Logging
 
 import com.blrest._
 import com.blrest.model.ImageMeta
-
-import reactivemongo.api.{QueryOpts, DB}
-import reactivemongo.core.commands.Count
-import reactivemongo.api.collections.default._
 
 import scala.util.Random
 

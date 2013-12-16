@@ -4,6 +4,9 @@ import reactivemongo.api.MongoDriver
 import com.typesafe.config.ConfigFactory
 import akka.actor.ActorSystem
 import com.blrest.boot.MyActorSystem
+import scala.util.Properties
+import scala.concurrent.duration._
+import scala.concurrent.Await
 
 
 /**
@@ -14,12 +17,32 @@ trait ReactiveMongoConnection extends MyActorSystem {
 
   private val config = ConfigFactory.load()
   implicit val context = system.dispatcher
-
   val driver = new MongoDriver
-  val connection = driver.connection(List(config.getString("mongodb.url")))
 
-  // Gets a reference to the database "plugin"
-  val db = connection(config.getString("mongodb.database"))
+  val pattern = "^mongodb:\\/\\/([\\w]*):([\\w]*)[@].([\\w\\.]+):([\\d]+)\\/([\\w]+)".r
+
+  val envUri = Properties.envOrElse("PORT", "").toString
+
+  val (connection, db) = if (!envUri.isEmpty){
+    val pattern(user, password, host, port, dbName) = envUri
+
+    val connection = driver.connection(List(config.getString("%s:%s".format(host, port))))
+    val authResult = Await.result(connection.authenticate(dbName, user, password), 5.seconds)
+
+    // Gets a reference to the database "plugin"
+    val db = connection(config.getString(dbName))
+
+    (connection, db)
+
+  }
+  else {
+    val connection = driver.connection(List(config.getString("mongodb.url")))
+
+    // Gets a reference to the database "plugin"
+    val db = connection(config.getString("mongodb.database"))
+
+    (connection, db)
+  }
 
   // Gets a reference to the collection "acoll"
   // By default, you get a BSONCollection.
