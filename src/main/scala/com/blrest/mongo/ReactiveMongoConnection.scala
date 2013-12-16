@@ -22,7 +22,7 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
 
   val pattern = "^mongodb:\\/\\/([\\w]*):([\\w]*)[@].([\\w\\.]+):([\\d]+)\\/([\\w]+)".r
 
-  val envUri = Properties.envOrElse("PORT", "").toString
+  val envUri = Properties.envOrElse("MONGOLAB_URI", "").toString
 
   val (connection, db) = if (!envUri.isEmpty){
     logger.info("Attempting to parse: %s".format(envUri))
