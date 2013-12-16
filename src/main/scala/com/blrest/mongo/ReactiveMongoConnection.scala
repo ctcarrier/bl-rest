@@ -32,7 +32,7 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
 
     // Gets a reference to the database "plugin"
     val db = connection(dbName)
-    val authResult = Await.result(db.authenticate(user, password)(120.seconds), 120.seconds)
+    val authResult = Await.result(db.authenticate(Properties.envOrElse("MONGODB_USER", "FAIL"), Properties.envOrElse("MONGODB_PASS", "FAIL"))(120.seconds), 120.seconds)
 
     (connection, db)
 
