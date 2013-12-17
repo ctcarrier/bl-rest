@@ -20,7 +20,7 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
   implicit val context = system.dispatcher
   val driver = new MongoDriver
 
-  val pattern = "^mongodb:\\/\\/([\\w]*):([\\w]*)@([\\w\\.]+):([\\d]+)\\/([\\w]+)".r
+  val pattern = "^mongodb:\\/\\/([\\w]*):([\\w]*)@([\\w\\.-]+):([\\d]+)\\/([\\w]+)".r
 
   val envUri = Properties.envOrElse("MONGOLAB_URI", "").toString
 
