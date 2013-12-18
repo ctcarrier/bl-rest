@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 import spray.testkit.Specs2RouteTest
 import com.blrest.endpoint.ImageDirectoryEndpoint
 import com.blrest.dao.ImageDirectoryDao
-import com.blrest.model.ImageMeta
+import com.blrest.model.{FlickrData, ImageMeta}
 import scala.util.Random
 import spray.http.StatusCodes._
 import spray.http.ContentTypes.`application/json`
@@ -20,11 +20,9 @@ import scala.concurrent.Future
 class ImageDirectoryEndpointSpec extends Specification with Specs2RouteTest with ImageDirectoryEndpoint {
 
   def actorRefFactory = system
-  implicit val formats = DefaultFormats
+  implicit val json4sJacksonFormats = DefaultFormats
 
   val dummyImageMeta = ImageMeta(
-    Random.nextLong(),
-    "url",
     Random.nextLong(),
     "title",
     "first_author",
@@ -35,14 +33,27 @@ class ImageDirectoryEndpointSpec extends Specification with Specs2RouteTest with
     Random.nextInt(),
     Random.nextInt(),
     "ARK_id_of_book",
-    "BL_DLS_ID"
-
-  )
+    "BL_DLS_ID",
+   FlickrData(Random.nextLong(),
+   "url",
+  "sourceo",
+    Random.nextInt(),
+    Random.nextInt(),
+       "sourcel",
+    Random.nextInt(),
+    Random.nextInt(),
+    "sourcem",
+    Random.nextInt(),
+    Random.nextInt(),
+    "sources",
+    Random.nextInt(),
+    Random.nextInt()
+  )              )
 
   "The service" should {
 
     "return an ImageMeta for direct GET requests" in {
-      Get("/images/%s".format(dummyImageMeta.flickr_id)) ~> imageDirectoryRoute ~> check {
+      Get("/images/%s".format(dummyImageMeta.flickr.flickr_id)) ~> imageDirectoryRoute ~> check {
         responseAs[ImageMeta] == dummyImageMeta
         contentType === `application/json`
         status === OK
@@ -63,7 +74,7 @@ class ImageDirectoryEndpointSpec extends Specification with Specs2RouteTest with
   }
   val imageDirectoryDao = new ImageDirectoryDao {
     def getImageMetaData(key: Long): Future[Option[ImageMeta]] = {
-      if (key == dummyImageMeta.flickr_id) {
+      if (key == dummyImageMeta.flickr.flickr_id) {
         return Future.successful(Some(dummyImageMeta))
       }
       else {

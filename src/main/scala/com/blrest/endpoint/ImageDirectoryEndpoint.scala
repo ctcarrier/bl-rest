@@ -36,8 +36,6 @@ trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJackson
 
   val imageDirectoryDao: ImageDirectoryDao
 
-  val json4sJacksonFormats = DefaultFormats
-
   def imageDirectoryRoute =
     respondWithMediaType(`application/json`) {
       pathPrefix("images") {

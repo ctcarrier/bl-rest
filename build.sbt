@@ -13,9 +13,7 @@ seq(Revolver.settings: _*)
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
 
-javaOptions in Revolver.reStart += "-Dakka.mode=dev"
-
-javaOptions in Revolver.reStart += "-Xdebug"
+javaOptions in Revolver.reStart += "-Dconfig.resource=dev.conf"
 
 unmanagedResourceDirectories in Compile <+=
     (baseDirectory) { _ / "src" / "main" / "webapp" }
@@ -43,6 +41,7 @@ libraryDependencies ++= Seq(
     "io.spray" % "spray-can" % "1.2.0" % "compile" withSources(),
     "io.spray" % "spray-io" % "1.2.0" % "compile" withSources(),
     "io.spray" % "spray-caching" % "1.2.0" % "compile" withSources(),
+  "io.spray" % "spray-client" % "1.2.0" % "compile" withSources(),
   "io.spray" % "spray-testkit" % "1.2.0" % "compile" withSources(),
     //AKKA
     "com.typesafe.akka" %% "akka-actor" % "2.2.3",
@@ -53,7 +52,9 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2" % "2.3.6" % "test" exclude("com.chuusai", "shapeless_2.10.3"),
   "org.scalamock" %% "scalamock-specs2-support" % "3.0.1" % "test",
   //ReactiveMongo
-  "org.reactivemongo" %% "reactivemongo" % "0.10.0-SNAPSHOT" % "compile"
+  "org.reactivemongo" %% "reactivemongo" % "0.10.0-SNAPSHOT" % "compile",
+  "nl.grons" %% "metrics-scala" % "3.0.4",
+  "com.codahale.metrics" % "metrics-graphite" % "3.0.1"
 )
 
 resolvers ++= Seq(
@@ -61,22 +62,12 @@ resolvers ++= Seq(
   "Sonatype OSS" at "http://oss.sonatype.org/content/repositories/releases/",
   "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
   "Spray repo" at "http://repo.spray.cc",
+  "Bintray" at "http://jcenter.bintray.com",
   "Local Maven Repository" at "file://" + Path.userHome + "/.m2/repository"
 )
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 testOptions in Test += Tests.Setup( loader => {
-  val oldEnv = System.getProperty("akka.mode")
-  if (oldEnv != null) {
-    System.setProperty("akka.mode.old", oldEnv)
-  }
-  System.setProperty("akka.mode", "test")
-} )
-
-testOptions in Test += Tests.Cleanup( loader => {
-  val oldEnv = System.getProperty("akka.mode.old")
-  if (oldEnv != null) {
-    System.setProperty("akka.mode", oldEnv)
-  }
+  System.setProperty("config.resource", "test.conf")
 } )

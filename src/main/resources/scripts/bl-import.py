@@ -51,8 +51,7 @@ def safe_cast(val, to_type, default):
         return default
 
 
-converters_map = {'flickr_id': long_param,
-                'flickr_url': string_param,
+converters_map = {
                 'book_identifier': long_param,
                 'title': string_param,
                 'first_author': string_param,
@@ -63,7 +62,21 @@ converters_map = {'flickr_id': long_param,
                 'page': int_param,
                 'image_idx': int_param,
                 'ARK_id_of_book': string_param,
-                'BL_DLS_ID': string_param}
+                'BL_DLS_ID': string_param,
+                'flickr_id': long_param,
+                 'flickr_url': string_param,
+                 'flickr_small_source': string_param,
+                 'flickr_small_height': int_param,
+                 'flickr_small_width': int_param,
+                 'flickr_medium_source': string_param,
+                 'flickr_medium_height': int_param,
+                 'flickr_medium_width': int_param,
+                 'flickr_large_source': string_param,
+                 'flickr_large_height': int_param,
+                 'flickr_large_width': int_param,
+                 'flickr_original_source': string_param,
+                 'flickr_original_height': int_param,
+                 'flickr_original_width': int_param}
 
 for root, dirs, files in os.walk(ns.filePath):
     for file in files:
@@ -78,10 +91,14 @@ for root, dirs, files in os.walk(ns.filePath):
                     print "Key error processing file {1} -> ({0})".format(e, file)
 
                 for row in r:
-                    row = {title:converter(value) for title, converter, value in zip(header, converters, row)}
-                    row['fileName'] = file
-                    bulkDocuments.append(row)
-                    if (len(bulkDocuments) > ns.insertSize):
+                    rowMap = {title:converter(value) for title, converter, value in zip(header, converters, row)}
+                    toInsert = {key: rowMap[key] for key in rowMap.keys() if (not key.startswith('flickr'))}
+                    flickr = {key: rowMap[key] for key in rowMap.keys() if (key.startswith('flickr'))}
+
+                    toInsert['fileName'] = file
+                    toInsert['flickr'] = flickr
+                    bulkDocuments.append(toInsert)
+                    if (len(bulkDocuments) >= ns.insertSize):
                         try:
                             collection.insert(bulkDocuments, w = wVal)
                             bulkDocuments = []
@@ -93,6 +110,6 @@ if (len(bulkDocuments) > 0):
     collection.insert(bulkDocuments, w = wVal)
     bulkDocuments = []
 
-collection.create_index("flickr_id")
+collection.create_index("flickr.flickr_id")
 collection.create_index("title")
 collection.create_index("fileName")
