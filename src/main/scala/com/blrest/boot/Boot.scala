@@ -48,7 +48,8 @@ object Boot extends App with Logging with ReactiveMongoConnection with MyActorSy
 
   if (config.getBoolean("blrest.metrics.enabled")) {
 
-    val graphite = new Graphite(new InetSocketAddress(config.getString("blrest.metrics.host"), config.getInt("blrest.metrics.port")))
+    //val graphite = new Graphite(new InetSocketAddress(config.getString("blrest.metrics.host"), config.getInt("blrest.metrics.port")))
+    val graphite = new Graphite(new InetSocketAddress("carbon.hostedgraphite.com", 2003))
     val reporter = GraphiteReporter.forRegistry(metricRegistry)
       .prefixedWith("%s.blrest".format(Properties.envOrElse("GRAPHITE_KEY", "FAIL")))
       .convertRatesTo(TimeUnit.SECONDS)

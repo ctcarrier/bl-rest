@@ -5,7 +5,7 @@ organization := "simplyoverkill"
 
 name := "blrest"
 
-version := "0.1.0-SNAPSHOT"
+version := "0.1.0"
 
 scalaVersion := "2.10.3"
 
@@ -13,7 +13,7 @@ seq(Revolver.settings: _*)
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
 
-javaOptions in Revolver.reStart += "-Dconfig.resource=dev.conf"
+//javaOptions in Revolver.reStart += "-Dconfig.resource=dev.conf"
 
 unmanagedResourceDirectories in Compile <+=
     (baseDirectory) { _ / "src" / "main" / "webapp" }

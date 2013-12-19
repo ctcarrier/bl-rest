@@ -16,6 +16,13 @@ At the sbt console:
 At the sbt console:
 test
 
+<h3>Implementations</h3>
+The only use of this API so far is a simple web app I created that displays random images:
+
+http://bl-web.herokuapp.com/api/images/random
+
+I will be adding some tagging capabilities soon.
+
 <h3>API</h3>
 
 Currently there are only two endpoints supported in this service. One will allow you to get the meta-data for an image
@@ -27,19 +34,33 @@ Example response:
 
 ```json
 {
-  "flickr_id" : 11289179413,
-  "flickr_url" : "http://www.flickr.com/photos/britishlibrary/11289179413",
-  "book_identifier" : 1886779,
-  "title" : "Battles and Leaders of the Civil War, being for the most part contributions by Union and Confederate officers, based upon “the Century War Series.” Edited by R. U. J. and C. C. B., etc. [Illustrated.]",
-  "first_author" : "JOHNSON, Robert Underwood and BUEL (Clarence Clough)",
-  "pubplace" : "4 vol. The Century Co.: New York, 1887, 8º",
-  "publisher" : "",
-  "date" : "1887",
-  "volume" : 1,
-  "page" : 474,
+  "book_identifier" : 744707,
+  "title" : "A Collection of Poems: viz. The Temple of Death: by the Marquis of Normanby. An Epistle to the Earl of Dorset: by Charles Montague, Lord Halifax. The Duel of the Stags: by Sir Robert Howard. With several original poems, never before printed, by the E. of Roscommon, the E. of Rochester, the E. of Orrery, Sir Charles Sedley, Sir George Etherege, Mr. Granville, Mr. Stepney, Mr. Dryden, &c. [A revised and enlarged reprint of “A Collection of Poems by Several Hands” published in 1693.]",
+  "first_author" : "ETHEREGE, George Sir",
+  "pubplace" : "London",
+  "publisher" : "Daniel Brown; Benjamin Tooke",
+  "date" : "1701",
+  "volume" : 0,
+  "page" : 272,
   "image_idx" : 1,
   "ARK_id_of_book" : "",
-  "BL_DLS_ID" : ""
+  "BL_DLS_ID" : "",
+  "flickr" : {
+    "flickr_id" : 10997917393,
+    "flickr_url" : "http://www.flickr.com/photos/britishlibrary/10997917393",
+    "flickr_small_source" : "http://farm8.staticflickr.com/7445/10997917393_dd83c8ace9_m.jpg",
+    "flickr_small_height" : 240,
+    "flickr_small_width" : 169,
+    "flickr_medium_source" : "http://farm8.staticflickr.com/7445/10997917393_dd83c8ace9.jpg",
+    "flickr_medium_height" : 342,
+    "flickr_medium_width" : 241,
+    "flickr_large_source" : "",
+    "flickr_large_height" : -1,
+    "flickr_large_width" : -1,
+    "flickr_original_source" : "http://farm8.staticflickr.com/7445/10997917393_06519e7338_o.jpg",
+    "flickr_original_height" : 342,
+    "flickr_original_width" : 241
+  }
 }
 ```
 
@@ -47,19 +68,33 @@ Example response:
 
 ```json
 {
-  "flickr_id" : 11289179413,
-  "flickr_url" : "http://www.flickr.com/photos/britishlibrary/11289179413",
-  "book_identifier" : 1886779,
-  "title" : "Battles and Leaders of the Civil War, being for the most part contributions by Union and Confederate officers, based upon “the Century War Series.” Edited by R. U. J. and C. C. B., etc. [Illustrated.]",
-  "first_author" : "JOHNSON, Robert Underwood and BUEL (Clarence Clough)",
-  "pubplace" : "4 vol. The Century Co.: New York, 1887, 8º",
-  "publisher" : "",
-  "date" : "1887",
-  "volume" : 1,
-  "page" : 474,
+  "book_identifier" : 744707,
+  "title" : "A Collection of Poems: viz. The Temple of Death: by the Marquis of Normanby. An Epistle to the Earl of Dorset: by Charles Montague, Lord Halifax. The Duel of the Stags: by Sir Robert Howard. With several original poems, never before printed, by the E. of Roscommon, the E. of Rochester, the E. of Orrery, Sir Charles Sedley, Sir George Etherege, Mr. Granville, Mr. Stepney, Mr. Dryden, &c. [A revised and enlarged reprint of “A Collection of Poems by Several Hands” published in 1693.]",
+  "first_author" : "ETHEREGE, George Sir",
+  "pubplace" : "London",
+  "publisher" : "Daniel Brown; Benjamin Tooke",
+  "date" : "1701",
+  "volume" : 0,
+  "page" : 272,
   "image_idx" : 1,
   "ARK_id_of_book" : "",
-  "BL_DLS_ID" : ""
+  "BL_DLS_ID" : "",
+  "flickr" : {
+    "flickr_id" : 10997917393,
+    "flickr_url" : "http://www.flickr.com/photos/britishlibrary/10997917393",
+    "flickr_small_source" : "http://farm8.staticflickr.com/7445/10997917393_dd83c8ace9_m.jpg",
+    "flickr_small_height" : 240,
+    "flickr_small_width" : 169,
+    "flickr_medium_source" : "http://farm8.staticflickr.com/7445/10997917393_dd83c8ace9.jpg",
+    "flickr_medium_height" : 342,
+    "flickr_medium_width" : 241,
+    "flickr_large_source" : "",
+    "flickr_large_height" : -1,
+    "flickr_large_width" : -1,
+    "flickr_original_source" : "http://farm8.staticflickr.com/7445/10997917393_06519e7338_o.jpg",
+    "flickr_original_height" : 342,
+    "flickr_original_width" : 241
+  }
 }
 ```
 
