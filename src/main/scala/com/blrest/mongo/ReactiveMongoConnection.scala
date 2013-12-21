@@ -51,5 +51,7 @@ trait ReactiveMongoConnection extends MyActorSystem with Logging {
   // Gets a reference to the collection "acoll"
   // By default, you get a BSONCollection.
   val imageCollection = db(config.getString("blrest.image.collection"))
+  val tagCollection = db(config.getString("blrest.tag.collection"))
+  val tagResponseCollection = db(config.getString("blrest.tag_response.collection"))
 
 }

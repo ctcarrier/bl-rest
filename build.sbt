@@ -54,7 +54,8 @@ libraryDependencies ++= Seq(
   //ReactiveMongo
   "org.reactivemongo" %% "reactivemongo" % "0.10.0-SNAPSHOT" % "compile",
   "nl.grons" %% "metrics-scala" % "3.0.4",
-  "com.codahale.metrics" % "metrics-graphite" % "3.0.1"
+  "com.codahale.metrics" % "metrics-graphite" % "3.0.1",
+  "eu.fakod" %% "neo4j-scala" % "0.3.0" % "compile"
 )
 
 resolvers ++= Seq(
@@ -63,6 +64,7 @@ resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
   "Spray repo" at "http://repo.spray.cc",
   "Bintray" at "http://jcenter.bintray.com",
+  "Neo4J" at "http://m2.neo4j.org/content/repositories/releases",
   "Local Maven Repository" at "file://" + Path.userHome + "/.m2/repository"
 )
 

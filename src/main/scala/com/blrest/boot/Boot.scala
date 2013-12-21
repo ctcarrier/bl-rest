@@ -8,7 +8,7 @@ import com.blrest.endpoint.{MasterInjector, MetricsActor, ImageDirectoryActor}
 import com.typesafe.config.ConfigFactory
 import scala.util.Properties
 import com.blrest.mongo.ReactiveMongoConnection
-import com.blrest.dao.{ImageDirectoryReactiveDao, ImageDirectoryDao}
+import com.blrest.dao.{MongoTagDao, TagDao, ImageDirectoryReactiveDao, ImageDirectoryDao}
 import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.pattern.ask
@@ -32,12 +32,13 @@ trait Instrumented extends nl.grons.metrics.scala.InstrumentedBuilder {
   val metricRegistry = Boot.metricRegistry
 }
 
-class DependencyInjector(dao: ImageDirectoryDao)
+class DependencyInjector(dao: ImageDirectoryDao, _tagDao: TagDao)
   extends IndirectActorProducer {
 
   override def actorClass = classOf[Actor]
   override def produce = new MasterInjector{
     val imageDirectoryDao = dao
+    val tagDao = _tagDao
   }
 }
 
@@ -66,9 +67,10 @@ object Boot extends App with Logging with ReactiveMongoConnection with MyActorSy
   val flickrApiKey = Properties.envOrElse("FLICKR_API_KEY", "")
 
   private val imageDirectoryDao: ImageDirectoryDao = new ImageDirectoryReactiveDao(db, imageCollection, system)
+  private val tagDao: TagDao = new MongoTagDao(db, tagCollection, tagResponseCollection, system)
 
   // the handler actor replies to incoming HttpRequests
-  val handler = system.actorOf(Props(classOf[DependencyInjector], imageDirectoryDao), name = "endpoints")
+  val handler = system.actorOf(Props(classOf[DependencyInjector], imageDirectoryDao, tagDao), name = "endpoints")
 
   implicit val timeout = Timeout(5.seconds)
   IO(Http) ? Http.Bind(handler, interface = host, port = port)
