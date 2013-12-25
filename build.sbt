@@ -13,8 +13,6 @@ seq(Revolver.settings: _*)
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
 
-//javaOptions in Revolver.reStart += "-Dconfig.resource=dev.conf"
-
 unmanagedResourceDirectories in Compile <+=
     (baseDirectory) { _ / "src" / "main" / "webapp" }
 

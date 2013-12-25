@@ -8,7 +8,7 @@ import com.blrest.endpoint.{MasterInjector, MetricsActor, ImageDirectoryActor}
 import com.typesafe.config.ConfigFactory
 import scala.util.Properties
 import com.blrest.mongo.ReactiveMongoConnection
-import com.blrest.dao.{MongoTagDao, TagDao, ImageDirectoryReactiveDao, ImageDirectoryDao}
+import com.blrest.dao._
 import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.pattern.ask
@@ -64,10 +64,12 @@ object Boot extends App with Logging with ReactiveMongoConnection with MyActorSy
 
   val host = "0.0.0.0"
   val port = Properties.envOrElse("PORT", "8080").toInt
-  val flickrApiKey = Properties.envOrElse("FLICKR_API_KEY", "")
+
+  val neoUri: String = Properties.envOrElse("NEO4J_URL", config.getString("blrest.neo4j.uri")).toString
 
   private val imageDirectoryDao: ImageDirectoryDao = new ImageDirectoryReactiveDao(db, imageCollection, system)
   private val tagDao: TagDao = new MongoTagDao(db, tagCollection, tagResponseCollection, system)
+  private val neo4jDao: Neo4jDao = new Neo4jDao(neoUri)
 
   // the handler actor replies to incoming HttpRequests
   val handler = system.actorOf(Props(classOf[DependencyInjector], imageDirectoryDao, tagDao), name = "endpoints")
