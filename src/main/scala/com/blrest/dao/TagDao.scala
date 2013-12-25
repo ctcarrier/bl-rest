@@ -8,6 +8,7 @@ import reactivemongo.core.commands.Count
 import scala.util.Random
 import reactivemongo.bson.BSONDocument
 import scala.concurrent.Future
+import com.typesafe.scalalogging.slf4j.Logging
 
 /**
  * Created by ccarrier for bl-rest.
@@ -19,7 +20,7 @@ trait TagDao {
   def saveTagResponse(tagResponse: TagResponse): Either[Exception, TagResponse]
 }
 
-class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: BSONCollection, system: ActorSystem) extends TagDao {
+class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: BSONCollection, system: ActorSystem) extends TagDao with Logging {
 
   implicit val context = system.dispatcher
 
