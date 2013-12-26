@@ -12,6 +12,7 @@ import spray.http.ContentTypes.`application/json`
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import scala.concurrent.Future
+import reactivemongo.bson.BSONObjectID
 
 /**
  * Created by ccarrier for bl-rest.
@@ -23,6 +24,7 @@ class ImageDirectoryEndpointSpec extends Specification with Specs2RouteTest with
   implicit val json4sJacksonFormats = DefaultFormats
 
   val dummyImageMeta = ImageMeta(
+    Some(BSONObjectID.generate),
     Random.nextLong(),
     "title",
     "first_author",

@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit
 import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import com.codahale.metrics.graphite.{GraphiteReporter, Graphite}
+import com.blrest.neo4j.Neo4jConnection
 
 /**
  * Created by ccarrier for bl-rest.
@@ -42,7 +43,14 @@ class DependencyInjector(dao: ImageDirectoryDao, _tagDao: TagDao)
   }
 }
 
-object Boot extends App with Logging with ReactiveMongoConnection with MyActorSystem {
+class Neo4jDependencyInjector(neoUri: String, neoUserTuple: Option[(String, String)])
+  extends IndirectActorProducer {
+
+  override def actorClass = classOf[Actor]
+  override def produce = new Neo4jDao(neoUri, neoUserTuple)
+}
+
+object Boot extends App with Logging with ReactiveMongoConnection with MyActorSystem with Neo4jConnection {
 
   val metricRegistry = new MetricRegistry()
   private val config = ConfigFactory.load()
@@ -65,14 +73,13 @@ object Boot extends App with Logging with ReactiveMongoConnection with MyActorSy
   val host = "0.0.0.0"
   val port = Properties.envOrElse("PORT", "8080").toInt
 
-  val neoUri: String = Properties.envOrElse("NEO4J_URL", config.getString("blrest.neo4j.uri")).toString
-
+  val neo4jDao = system.actorOf(Props(classOf[Neo4jDependencyInjector], neoUri, neoUserTuple), name = "neo4jDao")
   private val imageDirectoryDao: ImageDirectoryDao = new ImageDirectoryReactiveDao(db, imageCollection, system)
-  private val tagDao: TagDao = new MongoTagDao(db, tagCollection, tagResponseCollection, system)
-  private val neo4jDao: Neo4jDao = new Neo4jDao(neoUri)
+  private val tagDao: TagDao = new MongoTagDao(db, tagCollection, tagResponseCollection, system, neo4jDao)
 
   // the handler actor replies to incoming HttpRequests
   val handler = system.actorOf(Props(classOf[DependencyInjector], imageDirectoryDao, tagDao), name = "endpoints")
+
 
   implicit val timeout = Timeout(5.seconds)
   IO(Http) ? Http.Bind(handler, interface = host, port = port)

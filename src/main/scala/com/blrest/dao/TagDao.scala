@@ -3,12 +3,13 @@ package com.blrest.dao
 import com.blrest.model.{Tag, TagResponse}
 import reactivemongo.api.{QueryOpts, DB}
 import reactivemongo.api.collections.default.BSONCollection
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, Actor, ActorSystem}
 import reactivemongo.core.commands.Count
 import scala.util.Random
 import reactivemongo.bson.BSONDocument
 import scala.concurrent.Future
 import com.typesafe.scalalogging.slf4j.Logging
+import akka.pattern._
 
 /**
  * Created by ccarrier for bl-rest.
@@ -20,7 +21,7 @@ trait TagDao {
   def saveTagResponse(tagResponse: TagResponse): Either[Exception, TagResponse]
 }
 
-class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: BSONCollection, system: ActorSystem) extends TagDao with Logging {
+class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: BSONCollection, system: ActorSystem, neo4jActor: ActorRef) extends TagDao with Logging {
 
   implicit val context = system.dispatcher
 
@@ -35,6 +36,7 @@ class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: 
   def saveTagResponse(tagResponse: TagResponse): Either[Exception, TagResponse] = {
 
     tagResponseCollection.insert(tagResponse)
+    neo4jActor ! tagResponse
     Right(tagResponse)
   }
 }
