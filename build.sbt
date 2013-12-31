@@ -9,6 +9,10 @@ version := "0.1.0"
 
 scalaVersion := "2.10.3"
 
+publishTo := None
+
+mainClass in (Compile,run) := Some("com.blrest.boot.Boot")
+
 seq(Revolver.settings: _*)
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
