@@ -39,10 +39,10 @@ trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJackson
   def imageDirectoryRoute =
     respondWithMediaType(`application/json`) {
       pathPrefix("images") {
-        path(LongNumber) { key =>
+        path(Segment) { key =>
           get {
             complete {
-              imageDirectoryDao.getImageMetaData(key).mapTo[Option[ImageMeta]]
+              imageDirectoryDao.getImageMetaData(key)
             }
           }
         } ~

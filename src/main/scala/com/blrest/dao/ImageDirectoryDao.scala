@@ -3,7 +3,7 @@ package com.blrest.dao
 import scala.concurrent.Future
 import akka.actor.ActorSystem
 
-import reactivemongo.bson.BSONDocument
+import reactivemongo.bson.{BSONObjectID, BSONDocument}
 import reactivemongo.api.{QueryOpts, DB}
 import reactivemongo.core.commands.Count
 import reactivemongo.api.collections.default._
@@ -23,26 +23,21 @@ import nl.grons.metrics.scala.Counter
  */
 trait ImageDirectoryDao {
 
-  def getImageMetaData(key: Long): Future[Option[ImageMeta]]
+  def getImageMetaData(key: String): Future[Option[ImageMeta]]
   def getRandomImageMetaData: Future[Option[ImageMeta]]
 
 }
 
-class ImageDirectoryReactiveDao(db: DB, imageCollection: BSONCollection, system: ActorSystem) extends ImageDirectoryDao with Logging with Instrumented {
+class ImageDirectoryReactiveDao(db: DB, imageCollection: BSONCollection, system: ActorSystem) extends ImageDirectoryDao with Logging {
 
-  val getDirect: Counter = metrics.counter("getDirect")
-  val getRandom: Counter = metrics.counter("getRandom")
   implicit val context = system.dispatcher
 
-  def getImageMetaData(key: Long): Future[Option[ImageMeta]] = {
+  def getImageMetaData(key: String): Future[Option[ImageMeta]] = {
     logger.debug("Getting image: %s".format(key))
-    getDirect += 1
-    val query = BSONDocument("flickr.flickr_id" -> key)
-    imageCollection.find(query).one[ImageMeta]
+    imageCollection.find(BSONDocument("_id" -> BSONObjectID(key))).one[ImageMeta]
   }
 
   def getRandomImageMetaData: Future[Option[ImageMeta]] = {
-    getRandom += 1
     val futureCount = db.command(Count(imageCollection.name))
     futureCount.flatMap { count =>
       val skip = Random.nextInt(count)
