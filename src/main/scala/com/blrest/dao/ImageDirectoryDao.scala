@@ -23,7 +23,7 @@ import nl.grons.metrics.scala.Counter
  */
 trait ImageDirectoryDao {
 
-  def getImageMetaData(key: String): Future[Option[ImageMeta]]
+  def getImageMetaData(key: BSONObjectID): Future[Option[ImageMeta]]
   def getRandomImageMetaData: Future[Option[ImageMeta]]
 
 }
@@ -32,9 +32,9 @@ class ImageDirectoryReactiveDao(db: DB, imageCollection: BSONCollection, system:
 
   implicit val context = system.dispatcher
 
-  def getImageMetaData(key: String): Future[Option[ImageMeta]] = {
+  def getImageMetaData(key: BSONObjectID): Future[Option[ImageMeta]] = {
     logger.debug("Getting image: %s".format(key))
-    imageCollection.find(BSONDocument("_id" -> BSONObjectID(key))).one[ImageMeta]
+    imageCollection.find(BSONDocument("_id" -> key)).one[ImageMeta]
   }
 
   def getRandomImageMetaData: Future[Option[ImageMeta]] = {

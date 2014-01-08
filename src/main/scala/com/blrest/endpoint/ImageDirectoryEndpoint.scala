@@ -15,6 +15,7 @@ import com.blrest.model.ImageMeta
 
 import org.json4s.DefaultFormats
 import scala.concurrent.ExecutionContext
+import com.blrest.spray.BlPathMatchers
 
 /**
  * Created by ccarrier for bl-rest.
@@ -30,7 +31,7 @@ trait ImageDirectoryActor extends Actor with ImageDirectoryEndpoint {
   def receive = runRoute(imageDirectoryRoute)
 }
 
-trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJacksonSupport {
+trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJacksonSupport with BlPathMatchers {
 
   import ExecutionContext.Implicits.global
 
@@ -39,7 +40,7 @@ trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJackson
   def imageDirectoryRoute =
     respondWithMediaType(`application/json`) {
       pathPrefix("images") {
-        path(Segment) { key =>
+        path(BSONObjectID) { key =>
           get {
             complete {
               imageDirectoryDao.getImageMetaData(key)
