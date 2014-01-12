@@ -52,7 +52,7 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2" % "2.3.6" % "test" exclude("com.chuusai", "shapeless_2.10.3"),
   "org.scalamock" %% "scalamock-specs2-support" % "3.0.1" % "test",
   //ReactiveMongo
-  "org.reactivemongo" %% "reactivemongo" % "0.10.0-SNAPSHOT" % "compile",
+  "org.reactivemongo" %% "reactivemongo" % "0.10.0" % "compile",
   "nl.grons" %% "metrics-scala" % "3.0.4",
   "com.codahale.metrics" % "metrics-graphite" % "3.0.1",
   "eu.fakod" %% "neo4j-scala" % "0.3.0" % "compile"
