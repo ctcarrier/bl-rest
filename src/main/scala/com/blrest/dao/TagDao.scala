@@ -29,7 +29,9 @@ class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: 
     val futureCount = db.command(Count(tagCollection.name))
     futureCount.flatMap { count =>
       val skip = Random.nextInt(count)
-      tagCollection.find(BSONDocument()).options(QueryOpts(skipN = skip)).one[Tag]
+    for (
+      tag <- tagCollection.find(BSONDocument()).options(QueryOpts(skipN = skip)).one[Tag]
+    ) yield tag.map(x => x.copy(questionText = Some(x.displayPattern.format(x.name))))
     }
 
   }

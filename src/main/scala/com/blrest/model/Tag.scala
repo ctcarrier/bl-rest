@@ -11,6 +11,6 @@ case object Predicate {
   def IS = Predicate("IS")
   def HAS = Predicate("HAS")
 }
-case class Tag(_id: Option[BSONObjectID], name: String, displayPattern: String, predicate: Predicate)
+case class Tag(_id: Option[BSONObjectID], name: String, displayPattern: String, predicate: Predicate, questionText: Option[String])
 
 case class TagResponse(_id: Option[BSONObjectID], tag: Tag, imageMeta: ImageMeta, response: Boolean)
