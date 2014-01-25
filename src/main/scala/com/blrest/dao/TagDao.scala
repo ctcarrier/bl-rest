@@ -39,7 +39,7 @@ class MongoTagDao(db: DB, tagCollection: BSONCollection, tagResponseCollection: 
   def saveTagResponse(tagResponse: TagResponse): Either[Exception, TagResponse] = {
 
     tagResponseCollection.insert(tagResponse)
-    neo4jActor ! tagResponse
+    //neo4jActor ! tagResponse
     Right(tagResponse)
   }
 }
