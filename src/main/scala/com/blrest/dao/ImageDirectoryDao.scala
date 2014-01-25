@@ -25,6 +25,7 @@ trait ImageDirectoryDao {
 
   def getImageMetaData(key: BSONObjectID): Future[Option[ImageMeta]]
   def getRandomImageMetaData: Future[Option[ImageMeta]]
+  def getImageMetaDataByFlickrId(key: Long): Future[Option[ImageMeta]]
 
 }
 
@@ -35,6 +36,11 @@ class ImageDirectoryReactiveDao(db: DB, imageCollection: BSONCollection, system:
   def getImageMetaData(key: BSONObjectID): Future[Option[ImageMeta]] = {
     logger.debug("Getting image: %s".format(key))
     imageCollection.find(BSONDocument("_id" -> key)).one[ImageMeta]
+  }
+
+  def getImageMetaDataByFlickrId(key: Long): Future[Option[ImageMeta]] = {
+    logger.debug("Getting image: %s".format(key))
+    imageCollection.find(BSONDocument("flickr.flickr_id" -> key)).one[ImageMeta]
   }
 
   def getRandomImageMetaData: Future[Option[ImageMeta]] = {

@@ -47,6 +47,13 @@ trait ImageDirectoryEndpoint extends HttpService with Logging with Json4sJackson
             }
           }
         } ~
+          path(LongNumber) { key =>
+            get {
+              complete {
+                imageDirectoryDao.getImageMetaDataByFlickrId(key)
+              }
+            }
+          } ~
         path("random"){
           get {
             complete {
