@@ -24,9 +24,9 @@ case class ImageMeta(
 
 case class FlickrData(flickr_id: Long,
                       flickr_url: String,
-                      flickr_small_source: String,
-                      flickr_small_height: Int,
-                      flickr_small_width: Int,
+                      flickr_small_source: Option[String],
+                      flickr_small_height: Option[Int],
+                      flickr_small_width: Option[Int],
                       flickr_medium_source: String,
                       flickr_medium_height: Int,
                       flickr_medium_width: Int,
